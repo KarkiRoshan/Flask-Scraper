@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Web Scraper</title>
+  </head>
+  <body>
+    <nav><h1>Web Scraping App</h1></nav>
+    <form action="/submit" method="POST" enctype="multipart/form-data">
+      <input type="file" name="textfile" />
+      <input type="submit" value="submit" />
+      {%if success%}
+      <h2>{{success}}</h2>
+      {% endif %}
+    </form>
+    <form action="/scrape" method="get">
+      <button type="submit">Scrape</button>
+      {%if data%}
+      <h2>{{data}}</h2>
+      {% endif %}
+    </form>
+  </body>
+</html>
