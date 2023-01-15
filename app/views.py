@@ -4,6 +4,9 @@ from .scrape import scraper
 from .formatter import df_formatter
 import pandas as pd 
 import os 
+from .db_uploader import csv_to_db
+from .get_all_tables import get_all_tables
+
 
 @app.route("/", methods=["GET"])
 def index():
@@ -27,9 +30,6 @@ def scrape_data():
         f_path = './TextFiles'
         f_name = 'data.txt'
         search_items = open(f'{f_path}/{f_name}','r').read().split('\n')
-        # links,desc,titles = scraper('apple')
-        # # return(render_template[links,desc,titles])
-        # return render_template("index.html",data=[len(links),len(desc),len(titles)])
         count = 0 
         for search_term in search_items:
             scraper(search_term,count)
@@ -47,5 +47,34 @@ def format_data():
     df['Desc'] = df['Desc'].str.replace(".*—","",regex=True)
     df.to_csv(f'{csv_dir}/data_file.csv',index=False)
     final_df =df_formatter(df)
-    final_df.to_csv(f'{csv_dir}/formatted.csv',index=False)
-    return([df.Title[1]])    
+    final_df.to_csv(f'{csv_dir}/data_file.csv',index=False)
+    return('Data Has been formatted')    
+
+
+@app.route('/uploadtodb',methods=['POST'])
+def upload_to_db():
+    
+     if request.method == "POST":
+        table_name = request.form['user_input']
+        table_list = get_all_tables()
+        if table_name in table_list:
+            return(f'Please enter another tablename, {table_name} already exists ')
+        else:
+            status= csv_to_db(table_name)
+            return([status])
+
+
+@app.route('/downloaddata',methods=['GET'])
+def get_data():
+    
+     if request.method == "POST":
+        table_name = request.form['user_input']
+        table_list = get_all_tables()
+        if table_name in table_list:
+            return(f'Please enter another tablename, {table_name} already exists ')
+        else:
+            status= csv_to_db(table_name)
+            return([status])
+
+
+
