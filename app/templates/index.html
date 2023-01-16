@@ -21,5 +21,21 @@
       <h2>{{data}}</h2>
       {% endif %}
     </form>
+    <form action="/uploadtodb" method="POST">
+      <input type="text" name="input_text" placeholder="Enter Table Name" />
+      <input type="submit" value="Upload Data to Database" />
+      {%if table_name_conflict%}
+      <h2>{{table_name_conflict}}</h2>
+      {% endif %} {%if status%}
+      <h2>{{status}}</h2>
+      {% endif %}
+    </form>
+    <form action="/download" method="GET">
+      <input type="submit" value="View All Tables in The Database" />
+      {% for table in table_list %}
+      <a href="{{url_for('download_table',filename=table)}}">{{table}}</a>
+      <br />
+      {% endfor %}
+    </form>
   </body>
 </html>
