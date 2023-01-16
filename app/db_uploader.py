@@ -26,9 +26,9 @@ def csv_to_db(table_name):
                         DELIMITER ','
                         CSV HEADER;'''
         cursor.execute(copy_csv)
-        status='success'
+        status='Data has been successfully uploadedd'
     except (Exception, psycopg2.Error) as error:
-       status='failed'
+       status=f'Data couldnt be uploaded because of {error}'
         # print("Failed to insert record into person table", error)
     finally:
         # closing database connection.
