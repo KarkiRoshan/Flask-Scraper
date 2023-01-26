@@ -5,6 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import pandas as pd 
 import numpy as np 
+import time 
 from fake_useragent import UserAgent
 import os
 from selenium.webdriver.chrome.options import Options
@@ -51,7 +52,7 @@ def get_search_topic(element,searchKey):
 
 
 
-def scraper(searchKey,search_count):
+def scraper(searchKey,search_count,unique_table_name):
     links = []
     titles = []
     desc = []
@@ -63,12 +64,44 @@ def scraper(searchKey,search_count):
     chrome_options.add_argument('--headless')
     driver = webdriver.Chrome(chrome_options=chrome_options)
     driver.get("https://www.google.com")
+    driver.set_window_size(1550, 926)
     try:
         element = WebDriverWait(driver,10).until(
             EC.presence_of_element_located((By.XPATH,'//div/input[1]'))
         )
         element.send_keys(searchKey)
         element.send_keys(Keys.RETURN)
+        time.sleep(5)
+        entire_body = driver.find_element(By.TAG_NAME,'html')
+        pageHeight = driver.execute_script("return document.body.scrollHeight")
+
+        base_directory = f'./Screenshot/{unique_table_name}'
+        try:
+            os.mkdir(base_directory)
+        except:
+            pass
+        image_dir = f'{searchKey}'
+        final_path = os.path.join(base_directory,image_dir)
+
+        i=0
+        try:
+            os.mkdir(final_path)
+        except:
+            pass 
+
+        totalScrolledHeight = 0 
+        # print(totalScrolledHeight,pageHeight)
+        while True:
+            driver.save_screenshot(f'./{final_path}/{i}.png')
+            entire_body.send_keys(Keys.PAGE_DOWN)
+            
+            totalScrolledHeight = driver.execute_script("return window.pageYOffset + window.innerHeight")
+            i += 1 
+            # print(totalScrolledHeight,pageHeight)   
+            if(totalScrolledHeight+1 > pageHeight):
+                break
+        driver.set_window_size(1920, pageHeight)
+        driver.save_screenshot(f"{final_path}/full_page.png")
         main=driver.find_elements(By.XPATH,'//div[@jscontroller="SC7lYd"] | //div[@class="usJj9c"] ')
         links = get_link(main)
         desc = get_desc(main)
