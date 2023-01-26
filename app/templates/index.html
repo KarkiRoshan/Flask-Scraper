@@ -5,9 +5,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Web Scraper</title>
+    <link rel="stylesheet" type="text/css" href="static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;900&display=swap" rel="stylesheet">
+
   </head>
   <body>
-    <nav><h1>Web Scraping App</h1></nav>
+    <nav class="navbar">
+  <ul>
+    <li><a href="{{ url_for('index') }}">Web Scraper</a></li>
+  </ul>
+</nav>
     <form action="/submit" method="POST" enctype="multipart/form-data">
       <input type="file" name="textfile" />
       <input type="submit" value="submit" />
@@ -17,13 +26,8 @@
     </form>
     <form action="/scrape" method="get">
       <button type="submit">Scrape</button>
-      {%if data%}
-      <h2>{{data}}</h2>
-      {% endif %}
     </form>
-    <form action="/uploadtodb" method="POST">
-      <input type="text" name="input_text" placeholder="Enter Table Name" />
-      <input type="submit" value="Upload Data to Database" />
+
       {%if table_name_conflict%}
       <h2>{{table_name_conflict}}</h2>
       {% endif %} {%if status%}
@@ -32,10 +36,7 @@
     </form>
     <form action="/download" method="GET">
       <input type="submit" value="View All Tables in The Database" />
-      {% for table in table_list %}
-      <a href="{{url_for('download_table',filename=table)}}">{{table}}</a>
-      <br />
-      {% endfor %}
+     
     </form>
   </body>
 </html>

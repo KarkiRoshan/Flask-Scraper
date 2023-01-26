@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="static/style.css" />
+    <title>Scrape</title>
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="{{ url_for('index') }}">Web Scraper</a></li>
+      </ul>
+    </nav>
+
+    <div class="table-box">
+      <div class="table-row table-head">
+        <div class="table-cell first-cell">
+          <p>Filename</p>
+        </div>
+        <div class="table-cell">
+          <p>Date Added</p>
+        </div>
+        <div class="table-cell last-cell">
+          <p>Action</p>
+        </div>
+      </div>
+      {% for file in files %}
+      <div class="table-row">
+        <div class="table-cell first-cell">
+          <p>{{file[1]}}</p>
+        </div>
+        <div class="table-cell">
+          <p>{{file[2]}}</p>
+        </div>
+        <div class="table-cell last-cell">
+          {%if status%}
+          <p>{{status}}</p>
+          {% else %}
+          <a
+            href="{{url_for('scrape_data',filepath=file[0],oldfilename=file[1])}}"
+            >Scrape</a
+          >
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {%if table_name_conflict%}
+    <h2>{{table_name_conflict}}</h2>
+    {% endif %}
+  </body>
+</html>
