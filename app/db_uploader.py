@@ -5,8 +5,8 @@ from app import host
 from app import database
 from app import port
 
-
-def csv_to_db(table_name):   
+import pandas as pd 
+def csv_to_db(uniquename):   
  
     try:
         connection = psycopg2.connect(user=username,
@@ -16,19 +16,23 @@ def csv_to_db(table_name):
                                     database=database)
         connection.autocommit = True 
         cursor = connection.cursor()
-        create_table = f'''CREATE TABLE IF NOT EXISTS {table_name}(
-                                index varchar(10) Primary Key,
+        create_table = f'''CREATE TABLE IF NOT EXISTS scraped_data(
+                                id serial primary key,
+                                index varchar(10),
                                 title varchar(100),
-                                value varchar(200))'''
+                                value varchar(300),
+                                uniquename varchar(50),
+                                foreign key (uniquename) references scraping_requests("uniquefilename"))'''
         cursor.execute(create_table)
-        copy_csv = f'''COPY {table_name}(Title,value,index)
-                        FROM 'D:\\Users\\Predator\\Internship\\FlaskApp1\\CSV\\data_file.csv'
-                        DELIMITER ','
-                        CSV HEADER;'''
-        cursor.execute(copy_csv)
-        status='Data has been successfully uploadedd'
+        df = pd.read_csv('./CSV/data_file.csv')
+        for row in df.itertuples():
+            insert_script='''INSERT INTO scraped_data (index,title, value,uniquename)
+                            VALUES(%s,%s,%s,%s)'''
+            insert_values = (row.index,row.Title,row.Value,uniquename)      
+            cursor.execute(insert_script,insert_values) 
+        status='Uploaded'
     except (Exception, psycopg2.Error) as error:
-       status=f'Data couldnt be uploaded because of {error}'
+       status=f'{error}'
         # print("Failed to insert record into person table", error)
     finally:
         # closing database connection.
@@ -36,3 +40,4 @@ def csv_to_db(table_name):
             cursor.close()
             connection.close()
     return status
+# print(csv_to_db('b20230120115312'))
