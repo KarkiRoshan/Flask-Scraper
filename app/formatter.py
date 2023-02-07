@@ -14,8 +14,6 @@ def df_formatter(df):
     c = 1
     prev_search_key = final_df.iloc[0][1]
     for i in range(df.shape[0]):
-        # s = pd.Series([None,None,None],index=['Title','Value','index'])
-        # final_df = final_df.append(s,ignore_index=True)
         j = i + 1 
         temp_df = df[i:j].T
         temp_df = temp_df.reset_index()
@@ -28,7 +26,6 @@ def df_formatter(df):
         for c in range(1,temp_df.shape[0]+1):
             index = f'{a}.{b}.{c}'
             index_col.append(index)
-        # print(index_col)
         temp_df['index'] = index_col
         b += 1
         prev_search_key = new_search_key 
