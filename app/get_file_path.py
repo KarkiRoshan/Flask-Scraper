@@ -15,7 +15,11 @@ def get_file_path():
                                     database=database)
         connection.autocommit = True
         cursor = connection.cursor()
-        select_last_entry='''select path_to_file,original_file_name,time from scraping_requests where scraping_status=false'''   
+        select_last_entry='''
+                            SELECT path_to_file,original_file_name,platform 
+                            FROM scraping_requests 
+                            WHERE scraping_status=false
+                            '''   
         cursor.execute(select_last_entry)  
         rows = cursor.fetchall()  
         file_array = []  
