@@ -1,7 +1,9 @@
 *.csv
 /FlaskApp
 /__pycache__
-/app/__pycache__
+/app/__pycache__/
 config.py
 *.txt
 *.zip
+*.png
+*.json
