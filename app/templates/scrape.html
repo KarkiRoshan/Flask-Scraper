@@ -20,7 +20,7 @@
           <p>Filename</p>
         </div>
         <div class="table-cell">
-          <p>Date Added</p>
+          <p>Platform</p>
         </div>
         <div class="table-cell last-cell">
           <p>Action</p>
@@ -39,7 +39,7 @@
           <p>{{status}}</p>
           {% else %}
           <a
-            href="{{url_for('scrape_data',filepath=file[0],oldfilename=file[1])}}"
+            href="{{url_for('scrape_data',filepath=file[0],oldfilename=file[1],platform=file[2])}}"
             >Scrape</a
           >
           {% endif %}
