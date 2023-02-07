@@ -15,17 +15,17 @@ def get_data_from_db(keyname):
         
         connection.autocommit = True 
         cursor = connection.cursor()
-        sql = f"COPY (SELECT index,title,value FROM scraped_data where uniquename='{keyname}') TO STDOUT WITH CSV DELIMITER ','"
-        with open("./CSV/downloaded.csv", "w") as file:
-            cursor.copy_expert(sql, file)
-        status='success'
+        query = f'''COPY (SELECT index,title,value 
+                          FROM scraped_data 
+                          WHERE uniquename='{keyname}') TO STDOUT WITH CSV DELIMITER ',' '''
+        with open("./CSV/vertical.csv", "w",encoding='utf-8') as file:
+            cursor.copy_expert(query, file)
+        return('success')
     except (Exception, psycopg2.Error) as error:
        status=f'{error}'
-        # print("Failed to insert record into person table", error)
     finally:
         # closing database connection.
         if connection:
             cursor.close()
             connection.close()
     return status
-# print(get_data_from_db('b20230120144947'))
